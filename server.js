@@ -12,6 +12,7 @@ app.use(bodyParser.json())
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
+// setting up a database
 mongoose.connect(process.env.DATABASE,{
     useUnifiedTopology: true,
     useNewUrlParser: true
@@ -31,18 +32,20 @@ io.on("connection", (socket) => {
 
 
 
-
+// message model
 const Message1 = mongoose.model("Message1", {
     name: {type: String, required: true},
     message: {type: String, required: true}
 })
 
+// getting all messages stored in database
 app.get('/messages1', (req, res) => {
     Message1.find({}, (err,messages1) => {
         res.send(messages1)
     })
 })
 
+// posting message
 app.post('/messages1', (req, res) => {
     const message = new Message1 (req.body)
 
@@ -56,7 +59,7 @@ app.post('/messages1', (req, res) => {
     })
 })
 
-
+// setting up a server
 const server = http.listen(port, () => {
     console.log("Server works at port %d", port, "!!!")
 })
