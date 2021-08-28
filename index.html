@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="http://localhost:3010/socket.io/socket.io.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <div class="col-lg-12">
+            <div class="welcome text-center" style="padding: 1em 0;">
+                <h1>Chat Aplikacija</h1>
+            </div>
+            <div class="info-container">
+                <div class="input-container">
+                    <input id="name" placeholder="Ime" class="form-control">
+                </div>
+                <div class="message-container" style="padding-top: 1em;">
+                    <textarea id="message" class="form-control" placeholder="Upisite poruku"></textarea>
+                </div>
+                <div class="btn-container" style="padding-top: 1em;">
+                    <button class="btn btn-success" id="send">Posalji</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+        <div id="messages">
+
+        </div>
+</div>
+
+<script>
+    const socket = io()
+    $(() => {
+        $("#send").click(() => {
+            const message = {name: $("#name").val(), message: $("#message").val() }
+            postMessage(message)
+        })
+    getMessages()
+})
+
+    socket.on('message', addMessages)
+
+    function addMessages(message) {
+            console.log(addMessages)
+            console.log(message)
+            $("#messages").append(`<span class="span"> ${message.name} </span> <p class="p">${message.message}</p> <br>`)
+    }
+
+    function getMessages() {
+        $.get('http://localhost:3010/messages1', (data) => {
+            data.forEach(addMessages)
+        })
+    }
+
+    function postMessage(message) {
+        $.post('http://localhost:3010/messages1', message)
+    }
+</script>
+</body>
+</html>
